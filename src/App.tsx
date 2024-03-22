@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { Clip } from "./components/Clip";
-import type { SearchQuery } from "./types";
+import type { Clip as ClipT, SearchQuery } from "./types";
 import { SearchFilter } from "./components/SearchFilter";
+import { ClipsContainer } from "./components/ClipsContainer";
 
 function App() {
-  const [searchQuery, setSearchQuery] = useState<SearchQuery>({
-    title: "",
-    streamer: "",
-  });
+
+  const [clips, setClips] = useState<ClipT[]>([]);
 
   return (
-    <div className="flex place-content-center">
-      <h1>yo</h1>
-      <SearchFilter searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
-      <Clip video="tt" />
+    <div className="App text-center text-white p-4 overflow-x-hidden min-h-full">
+      <h1 className="font-mono text-5xl mb-16">Search clips</h1>
+      <SearchFilter setClips={setClips}/>
+      <ClipsContainer clips={clips} />
     </div>
   );
 }
