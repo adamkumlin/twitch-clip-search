@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Clip, SearchQuery } from "../types";
+import {Clip as ClipC} from "../classes/Clip";
 
 interface SearchFilterProps {
   setClips: React.Dispatch<React.SetStateAction<Clip[]>>;
@@ -11,9 +12,11 @@ export function SearchFilter({ setClips }: SearchFilterProps) {
     streamer: "",
   });
 
-  function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
+  async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
-    getBroadcasterId();
+    const data = await getBroadcasterId();
+    const rawClips = await getClips(data.data[0].id);
+    populateClipsArray(rawClips);
   }
 
   function resetSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
@@ -33,23 +36,39 @@ export function SearchFilter({ setClips }: SearchFilterProps) {
     }
   }
 
-  function getClips() {
-    fetch("https://api.twitch.tv/helix/clips?broadcaster_id=22484632&first=5")
-      .then((res) => res.json())
-      .then((data) => setClips(data));
-  }
+  function getClips(broadcasterId: string) {
+    if (broadcasterId === "") {
+      return;
+    }
 
-  function getBroadcasterId() {
-    fetch(`https://api.twitch.tv/helix/users?login=${searchQuery.streamer}`, {
-      method: "POST",
+    const data = fetch(`https://api.twitch.tv/helix/clips?broadcaster_id=${broadcasterId}&first=5`, {
       headers: {
         Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
         "Client-Id": import.meta.env.VITE_CLIENT_ID,
       },
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
+    }).then((res) => res.json());
+
+    return data;
+  }
+
+  function getBroadcasterId() {
+    let data = fetch(`https://api.twitch.tv/helix/users?login=${searchQuery.streamer}`, {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
+        "Client-Id": import.meta.env.VITE_CLIENT_ID,
+      },
+    }).then((response) => response.json());
+
+    return data;
+  }
+
+  function populateClipsArray(data: any) {
+    const clips: Clip[] = [];
+    for (const clipData of data.data) {
+      let clip: Clip = new ClipC(clipData.id, clipData.url, clipData.embed_url, clipData.broadcaster_name, clipData.creator_name, clipData.title, clipData.view_count, clipData.created_at);
+      clips.push(clip);
+    }
+    setClips(clips);
   }
 
   return (

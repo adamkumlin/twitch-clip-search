@@ -6,11 +6,14 @@ interface ClipsContainerProps {
 }
 
 export function ClipsContainer({ clips }: ClipsContainerProps) {
+
+  const clipElements = clips.map((clip, index) => {
+    <p key={index}>{clip.broadcasterName}</p>;
+  });
+
   return (
     <>
-    {clips.map((clip, index) => {
-      <Clip key={index} clip={clip}/>
-    })}
+      {clipElements}
     </>
   );
 }
