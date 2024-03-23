@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { Clip, SearchQuery } from "../types";
-import {Clip as ClipC} from "../classes/Clip";
 
 interface SearchFilterProps {
   setClips: React.Dispatch<React.SetStateAction<Clip[]>>;
@@ -65,7 +64,17 @@ export function SearchFilter({ setClips }: SearchFilterProps) {
   function populateClipsArray(data: any) {
     const clips: Clip[] = [];
     for (const clipData of data.data) {
-      let clip: Clip = new ClipC(clipData.id, clipData.url, clipData.embed_url, clipData.broadcaster_name, clipData.creator_name, clipData.title, clipData.view_count, clipData.created_at);
+      const clip: Clip = {
+        id: clipData.id,
+        url: clipData.url,
+        embedUrl: clipData.embed_url,
+        broadcasterName: clipData.broadcaster_name,
+        creatorName: clipData.creator_name,
+        title: clipData.title,
+        viewCount: clipData.view_count,
+        createdAt: clipData.created_at,
+      };
+
       clips.push(clip);
     }
     setClips(clips);

@@ -10,7 +10,7 @@ export function Clip({ clip }: ClipProps) {
     <div>
       <h2>{clip.title}</h2>
       <iframe
-        src={clip.embedUrl}
+        src={clip.embedUrl + "&parent=localhost"}
         height="360"
         width="640"></iframe>
     </div>
