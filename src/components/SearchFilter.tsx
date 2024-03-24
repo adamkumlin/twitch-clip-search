@@ -7,9 +7,10 @@ import SearchIcon from "@mui/icons-material/Search";
 interface SearchFilterProps {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
+  goToNextPage: () => any;
 }
 
-export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchFilterProps) {
+export function SearchFilter({ setResponseDetails, populateClipsArray, goToNextPage }: SearchFilterProps) {
   const [searchQuery, setSearchQuery] = useState<SearchQuery>({
     title: "",
     streamer: "",
@@ -30,7 +31,9 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
       pagination: rawClips.pagination.cursor,
       broadcasterId: data.data[0].id,
     }));
-    populateClipsArray(rawClips);
+
+    const filteredClips = filterClips(rawClips);
+    populateClipsArray(filteredClips);
   }
 
   function resetSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
@@ -50,7 +53,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
     }
   }
 
-  function getClips(broadcasterId: string) {
+  function getClips(broadcasterId: string): any {
     if (broadcasterId === "") {
       return;
     }
@@ -65,7 +68,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
     return data;
   }
 
-  function getBroadcasterId() {
+  function getBroadcasterId(): any {
     let data = fetch(`https://api.twitch.tv/helix/users?login=${searchQuery.streamer}`, {
       headers: {
         Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
@@ -74,6 +77,11 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
     }).then((response) => response.json());
 
     return data;
+  }
+
+  function filterClips(rawClips: any): any {
+    const filteredClips = rawClips.data.filter(clip => clip.title.toLowerCase().includes(searchQuery.title.toLowerCase()));
+    return filteredClips;
   }
 
   return (
