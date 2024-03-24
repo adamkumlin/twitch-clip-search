@@ -1,13 +1,16 @@
-import type { Clip as ClipT } from "../types";
+import type { Clip as ClipT, ResponseDetails } from "../types";
 import { Clip } from "./Clip";
 import { NextButton } from "./NextButton";
 import { PreviousButton } from "./PreviousButton";
 
 interface ClipsContainerProps {
   clips: ClipT[];
+  responseDetails: ResponseDetails;
+  populateClipsArray: (data: any) => void;
+  setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
 }
 
-export function ClipsContainer({ clips }: ClipsContainerProps) {
+export function ClipsContainer({ clips, responseDetails, populateClipsArray, setResponseDetails }: ClipsContainerProps) {
   return (
     <div className="ClipsContainer">
       {clips ? (
@@ -18,8 +21,16 @@ export function ClipsContainer({ clips }: ClipsContainerProps) {
         <h2>No results</h2>
       )}
 
-      <PreviousButton pagination=""/>
-      <NextButton pagination=""/>
+      <PreviousButton
+        responseDetails={responseDetails}
+        populateClipsArray={populateClipsArray}
+        setResponseDetails={setResponseDetails}
+      />
+      <NextButton
+        responseDetails={responseDetails}
+        populateClipsArray={populateClipsArray}
+        setResponseDetails={setResponseDetails}
+      />
     </div>
   );
 }

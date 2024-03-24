@@ -1,15 +1,15 @@
 import { useState } from "react";
-import type { Clip, SearchQuery } from "../types";
+import type { ResponseDetails, SearchQuery } from "../types";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import TitleIcon from "@mui/icons-material/Title";
 import SearchIcon from "@mui/icons-material/Search";
 
 interface SearchFilterProps {
-  setClips: React.Dispatch<React.SetStateAction<Clip[]>>;
-  setResponseDetails: React.Dispatch<React.SetStateAction<string>>;
+  setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
+  populateClipsArray: (data: any) => void;
 }
 
-export function SearchFilter({ setClips, setResponseDetails }: SearchFilterProps) {
+export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchFilterProps) {
   const [searchQuery, setSearchQuery] = useState<SearchQuery>({
     title: "",
     streamer: "",
@@ -25,7 +25,11 @@ export function SearchFilter({ setClips, setResponseDetails }: SearchFilterProps
 
     const data = await getBroadcasterId();
     const rawClips = await getClips(data.data[0].id);
-    setResponseDetails(data.pagination.cursor);
+    setResponseDetails((current) => ({
+      ...current,
+      pagination: rawClips.pagination.cursor,
+      broadcasterId: data.data[0].id,
+    }));
     populateClipsArray(rawClips);
   }
 
@@ -70,25 +74,6 @@ export function SearchFilter({ setClips, setResponseDetails }: SearchFilterProps
     }).then((response) => response.json());
 
     return data;
-  }
-
-  function populateClipsArray(data: any) {
-    const clips: Clip[] = [];
-    for (const clipData of data.data) {
-      const clip: Clip = {
-        id: clipData.id,
-        url: clipData.url,
-        embedUrl: clipData.embed_url,
-        broadcasterName: clipData.broadcaster_name,
-        creatorName: clipData.creator_name,
-        title: clipData.title,
-        viewCount: clipData.view_count,
-        createdAt: clipData.created_at,
-      };
-
-      clips.push(clip);
-    }
-    setClips(clips);
   }
 
   return (

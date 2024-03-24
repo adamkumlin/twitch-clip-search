@@ -13,3 +13,8 @@ export type Clip = {
   viewCount: number;
   createdAt: Date;
 }
+
+export type ResponseDetails = {
+  pagination: string;
+  broadcasterId: string;
+}
