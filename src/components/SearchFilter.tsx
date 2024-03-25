@@ -25,7 +25,13 @@ export function SearchFilter({ setResponseDetails, populateClipsArray, goToNextP
     }
 
     const data = await getBroadcasterId();
-    const rawClips = await getClips(data.data[0].id);
+
+    let rawClips;
+    do {
+      rawClips = await getClips(data.data[0].id);
+    } while (rawClips.pagination);
+
+    
     setResponseDetails((current) => ({
       ...current,
       pagination: rawClips.pagination.cursor,
@@ -80,7 +86,9 @@ export function SearchFilter({ setResponseDetails, populateClipsArray, goToNextP
   }
 
   function filterClips(rawClips: any): any {
-    const filteredClips = rawClips.data.filter(clip => clip.title.toLowerCase().includes(searchQuery.title.toLowerCase()));
+    const filteredClips = rawClips.data.filter((clip) =>
+      clip.title.toLowerCase().includes(searchQuery.title.toLowerCase())
+    );
     return filteredClips;
   }
 
