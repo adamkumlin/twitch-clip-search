@@ -7,10 +7,9 @@ import SearchIcon from "@mui/icons-material/Search";
 interface SearchFilterProps {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
-  goToNextPage: () => any;
 }
 
-export function SearchFilter({ setResponseDetails, populateClipsArray, goToNextPage }: SearchFilterProps) {
+export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchFilterProps) {
   const [searchQuery, setSearchQuery] = useState<SearchQuery>({
     title: "",
     streamer: "",
@@ -19,27 +18,27 @@ export function SearchFilter({ setResponseDetails, populateClipsArray, goToNextP
   async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
 
-    if (searchQuery.streamer === "" || searchQuery.title === "") {
-      alert("Missing input");
+    if (searchQuery.streamer === "") {
+      alert("Streamer is mandatory");
       return;
     }
 
     const data = await getBroadcasterId();
 
-    let rawClips;
-    do {
-      rawClips = await getClips(data.data[0].id);
-    } while (rawClips.pagination);
+    const rawClips = await getClips(data.data[0].id);
 
-    
     setResponseDetails((current) => ({
       ...current,
       pagination: rawClips.pagination.cursor,
       broadcasterId: data.data[0].id,
     }));
 
-    const filteredClips = filterClips(rawClips);
-    populateClipsArray(filteredClips);
+    if (searchQuery.title !== "") {
+      const filteredClips = filterClips(rawClips);
+      populateClipsArray(filteredClips);
+      return;
+    }
+    populateClipsArray(rawClips);
   }
 
   function resetSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {

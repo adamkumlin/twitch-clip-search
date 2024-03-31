@@ -3,7 +3,7 @@ import type { ResponseDetails } from "../types";
 
 interface PreviousButtonProps {
   responseDetails: ResponseDetails;
-  populateClipsArray: (data: any) => void;
+  populateClipsArray: (data: any, isFiltered: boolean) => void;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
 }
 
@@ -28,8 +28,7 @@ export function PreviousButton({ responseDetails, populateClipsArray, setRespons
       ...current,
       pagination: rawClips.pagination.cursor,
     }));
-    console.log(rawClips)
-    populateClipsArray(rawClips);
+    populateClipsArray(rawClips, false);
   }
 
   return (

@@ -8,10 +8,9 @@ interface ClipsContainerProps {
   responseDetails: ResponseDetails;
   populateClipsArray: (data: any) => void;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
-  goToNextPage: () => any;
 }
 
-export function ClipsContainer({ clips, responseDetails, populateClipsArray, setResponseDetails, goToNextPage }: ClipsContainerProps) {
+export function ClipsContainer({ clips, responseDetails, populateClipsArray, setResponseDetails }: ClipsContainerProps) {
 
   return (
     <div className="ClipsContainer">
@@ -32,7 +31,6 @@ export function ClipsContainer({ clips, responseDetails, populateClipsArray, set
         responseDetails={responseDetails}
         populateClipsArray={populateClipsArray}
         setResponseDetails={setResponseDetails}
-        goToNextPage={goToNextPage}
       />
     </div>
   );
