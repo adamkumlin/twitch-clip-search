@@ -10,17 +10,23 @@ interface ClipsContainerProps {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
 }
 
-export function ClipsContainer({ clips, responseDetails, populateClipsArray, setResponseDetails }: ClipsContainerProps) {
-
+export function ClipsContainer({
+  clips,
+  responseDetails,
+  populateClipsArray,
+  setResponseDetails,
+}: ClipsContainerProps) {
   return (
     <div className="ClipsContainer">
-      {clips ? (
-        clips.map((clip, index) => {
-          return <Clip key={index} clip={clip} />;
-        })
-      ) : (
-        <h2>No results</h2>
-      )}
+      <div className="flex flex-row flex-wrap">
+        {clips ? (
+          clips.map((clip, index) => {
+            return <Clip key={index} clip={clip} />;
+          })
+        ) : (
+          <h2>No results</h2>
+        )}
+      </div>
 
       <PreviousButton
         responseDetails={responseDetails}

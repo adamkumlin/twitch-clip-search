@@ -63,12 +63,15 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
       return;
     }
 
-    const data = fetch(`https://api.twitch.tv/helix/clips?broadcaster_id=${broadcasterId}&first=15`, {
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
-        "Client-Id": import.meta.env.VITE_CLIENT_ID,
-      },
-    }).then((res) => res.json());
+    const data = fetch(
+      `https://api.twitch.tv/helix/clips?broadcaster_id=${broadcasterId}&first=16&started_at=2024-01-01T00:00:00Z&ended_at=2024-02-01T00:00:00Z`,
+      {
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
+          "Client-Id": import.meta.env.VITE_CLIENT_ID,
+        },
+      }
+    ).then((res) => res.json());
 
     return data;
   }
