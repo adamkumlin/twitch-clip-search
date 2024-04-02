@@ -18,7 +18,7 @@ export function ClipsContainer({
 }: ClipsContainerProps) {
   return (
     <div className="ClipsContainer">
-      <div className="flex flex-row flex-wrap">
+      <div className="flex flex-col w-1/2 m-auto mt-10">
         {clips ? (
           clips.map((clip, index) => {
             return <Clip key={index} clip={clip} />;
