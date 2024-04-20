@@ -18,3 +18,16 @@ export type ResponseDetails = {
   pagination: string;
   broadcasterId: string;
 }
+
+export type SortMetric = {
+  title: string;
+  date: string;
+  views: string;
+}
+
+export type FromTop = boolean;
+
+export type SortOption = {
+  metric: SortMetric;
+  fromTop: boolean;
+}

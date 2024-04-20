@@ -49,12 +49,16 @@ function App() {
   return (
     <div className="App text-center text-white p-4 overflow-x-hidden min-h-full">
       <SearchFilter setResponseDetails={setResponseDetails} populateClipsArray={populateClipsArray} />
-      <ClipsContainer
-        clips={clips}
-        responseDetails={responseDetails}
-        populateClipsArray={populateClipsArray}
-        setResponseDetails={setResponseDetails}
-      />
+
+      {clips.length > 0 ? (
+        <ClipsContainer
+          setClips={setClips}
+          clips={clips}
+          responseDetails={responseDetails}
+          populateClipsArray={populateClipsArray}
+          setResponseDetails={setResponseDetails}
+        />
+      ) : null}
     </div>
   );
 }
