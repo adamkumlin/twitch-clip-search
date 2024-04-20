@@ -3,6 +3,9 @@ import type { ResponseDetails, SearchQuery } from "../types";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import TitleIcon from "@mui/icons-material/Title";
 import SearchIcon from "@mui/icons-material/Search";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+
+
 
 interface SearchFilterProps {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
@@ -87,7 +90,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
 
   return (
     <>
-      <div className="flex flex-row place-content-center">
+      <form className="flex flex-row place-content-center">
         <div className="group">
           <VideoCameraFrontIcon className="relative top-8 right-3 pointer-events-none group-focus-within:hidden" />
           <label htmlFor="streamer" className="relative top-8 pointer-events-none group-focus-within:top-0">
@@ -108,10 +111,33 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
           </label>
           <input
             id="title"
-            className="text-black block m-auto h-10 bg-gray-500 border-r-2 border-t-2 border-b-2"
+            className="text-black block m-auto h-10 bg-gray-500 border-t-2 border-b-2"
             type="text"
             value={searchQuery.title}
             onChange={(e) => handleChange(e)}
+          />
+        </div>
+        <div className="group">
+          <DateRangeIcon className="relative top-8 right-3 pointer-events-none group-focus-within:hidden" />
+          <label htmlFor="dateFrom" className="relative top-8 pointer-events-none group-focus-within:top-0">
+            From
+          </label>
+          <input
+            type="date"
+            id="dateFrom"
+            className="text-transparent block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2"
+          />
+        </div>
+        <div className="group">
+          <DateRangeIcon className="relative top-8 right-3 pointer-events-none group-focus-within:hidden" />
+          <label htmlFor="dateTo" className="relative top-8 pointer-events-none group-focus-within:top-0">
+            To
+          </label>
+          <input
+            type="dateTo"
+            id="date"
+            className="text-transparent block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2 *"
+            max={Date.now()}
           />
         </div>
         <SearchIcon
@@ -124,7 +150,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
           value="Search"
           onClick={(e) => handleSearch(e)}
         />
-      </div>
+      </form>
     </>
   );
 }

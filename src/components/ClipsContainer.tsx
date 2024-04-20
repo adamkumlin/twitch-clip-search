@@ -26,6 +26,8 @@ export function ClipsContainer({
     fromTop: true,
   });
 
+  const [focusedThumbnail, setFocusedThumbnail] = useState<string>("");
+
   function handleSortOption(metric: SortMetric): void {
     if (!sortOption) {
       setSortOption({
@@ -48,6 +50,7 @@ export function ClipsContainer({
   useEffect(() => {
     let sortedClips: ClipT[] = [];
     if (sortOption.metric === ("title" as unknown as SortMetric)) {
+      // Sort alphabetically
       sortedClips = clips.sort((a, b) => {
         const nameA = a.title.toUpperCase();
         const nameB = b.title.toUpperCase();
@@ -70,29 +73,30 @@ export function ClipsContainer({
         return 0;
       });
     } else if (sortOption.metric === ("date" as unknown as SortMetric)) {
+      // Sort based on earliest/latest date
       sortedClips = clips.sort((a, b) => {
         const nameA = a.createdAt;
         const nameB = b.createdAt;
-        
-       if (sortOption.fromTop) {
-         if (nameA < nameB) {
-           return -1;
-         }
-         if (nameA > nameB) {
-           return 1;
-         }
-       } else {
-         if (nameA < nameB) {
-           return 1;
-         }
-         if (nameA > nameB) {
-           return -1;
-         }
-       }
-       return 0;
+
+        if (sortOption.fromTop) {
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+        } else {
+          if (nameA < nameB) {
+            return 1;
+          }
+          if (nameA > nameB) {
+            return -1;
+          }
+        }
+        return 0;
       });
     } else if (sortOption.metric === ("views" as unknown as SortMetric)) {
-
+      // Sort based on highest/lowest views
       if (sortOption.fromTop) {
         sortedClips = clips.sort((a, b) => a.viewCount - b.viewCount);
       } else {
@@ -104,52 +108,69 @@ export function ClipsContainer({
   }, [sortOption]);
 
   return (
-    <div className="ClipsContainer w-1/2 m-auto mt-10">
-      <div className="grid grid-cols-3 font-bold *:underline *:cursor-pointer">
-        <a onClick={() => handleSortOption("title" as unknown as SortMetric)}>
-          Title{" "}
-          {sortOption.fromTop && sortOption.metric === ("title" as unknown as SortMetric) ? (
-            <ArrowUpward />
-          ) : !sortOption.fromTop && sortOption.metric === ("title" as unknown as SortMetric) ? (
-            <ArrowDownward />
-          ) : null}
-        </a>
-        <a onClick={() => handleSortOption("date" as unknown as SortMetric)}>
-          Upload date{" "}
-          {sortOption.fromTop && sortOption.metric === ("date" as unknown as SortMetric) ? (
-            <ArrowUpward />
-          ) : !sortOption.fromTop && sortOption.metric === ("date" as unknown as SortMetric) ? (
-            <ArrowDownward />
-          ) : null}
-        </a>
-        <a onClick={() => handleSortOption("views" as unknown as SortMetric)}>
-          Views{" "}
-          {sortOption.fromTop && sortOption.metric === ("views" as unknown as SortMetric) ? (
-            <ArrowUpward />
-          ) : !sortOption.fromTop && sortOption.metric === ("views" as unknown as SortMetric) ? (
-            <ArrowDownward />
-          ) : null}
-        </a>
+    <>
+      <div
+        className="ClipsContainer w-1/2 m-auto mt-10"
+        style={focusedThumbnail !== "" ? { filter: "brightness(0.4)" } : { display: "block" }}>
+        <div className="grid grid-cols-3 font-bold">
+          <div>
+            <a className="cursor-pointer underline" onClick={() => handleSortOption("title" as unknown as SortMetric)}>
+              Title{" "}
+              {sortOption.fromTop && sortOption.metric === ("title" as unknown as SortMetric) ? (
+                <ArrowDownward />
+              ) : !sortOption.fromTop && sortOption.metric === ("title" as unknown as SortMetric) ? (
+                <ArrowUpward />
+              ) : null}
+            </a>
+          </div>
+
+          <div>
+            <a className="cursor-pointer underline" onClick={() => handleSortOption("date" as unknown as SortMetric)}>
+              Upload date{" "}
+              {sortOption.fromTop && sortOption.metric === ("date" as unknown as SortMetric) ? (
+                <ArrowDownward />
+              ) : !sortOption.fromTop && sortOption.metric === ("date" as unknown as SortMetric) ? (
+                <ArrowUpward />
+              ) : null}
+            </a>
+          </div>
+          <div>
+            <a className="cursor-pointer underline" onClick={() => handleSortOption("views" as unknown as SortMetric)}>
+              Views{" "}
+              {sortOption.fromTop && sortOption.metric === ("views" as unknown as SortMetric) ? (
+                <ArrowDownward />
+              ) : !sortOption.fromTop && sortOption.metric === ("views" as unknown as SortMetric) ? (
+                <ArrowUpward />
+              ) : null}
+            </a>
+          </div>
+        </div>
+
+        {clips ? (
+          clips.map((clip, index) => {
+            return <Clip key={index} clip={clip} setFocusedThumbnail={setFocusedThumbnail} />;
+          })
+        ) : (
+          <h2>No results</h2>
+        )}
+
+        <PreviousButton
+          responseDetails={responseDetails}
+          populateClipsArray={populateClipsArray}
+          setResponseDetails={setResponseDetails}
+        />
+        <NextButton
+          responseDetails={responseDetails}
+          populateClipsArray={populateClipsArray}
+          setResponseDetails={setResponseDetails}
+        />
       </div>
-
-      {clips ? (
-        clips.map((clip, index) => {
-          return <Clip key={index} clip={clip} />;
-        })
-      ) : (
-        <h2>No results</h2>
-      )}
-
-      <PreviousButton
-        responseDetails={responseDetails}
-        populateClipsArray={populateClipsArray}
-        setResponseDetails={setResponseDetails}
-      />
-      <NextButton
-        responseDetails={responseDetails}
-        populateClipsArray={populateClipsArray}
-        setResponseDetails={setResponseDetails}
-      />
-    </div>
+      {focusedThumbnail !== "" ? (
+        <img
+          className="fixed z-20 border-white border-2 top-48 w-1/2 pointer-events-none right-[29.5rem] rounded-lg"
+          src={focusedThumbnail}
+        />
+      ) : null}
+    </>
   );
 }
