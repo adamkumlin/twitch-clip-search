@@ -1,10 +1,20 @@
 import { useState } from "react";
-import type { Clip, ResponseDetails } from "./types";
+import type { Clip, ResponseDetails, SearchQuery } from "./types";
 import { SearchFilter } from "./components/SearchFilter";
 import { ClipsContainer } from "./components/ClipsContainer";
 
 function App() {
   const [clips, setClips] = useState<Clip[]>([]);
+  const date = new Date();
+  let oneMonthPriorToToday = new Date();
+  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  oneMonthPriorToToday.setDate(today.getDate() - 30);
+  const [searchQuery, setSearchQuery] = useState<SearchQuery>({
+    title: "",
+    streamer: "",
+    startDate: oneMonthPriorToToday.toISOString(),
+    endDate: today.toISOString(),
+  });
   const [responseDetails, setResponseDetails] = useState<ResponseDetails>({
     pagination: "",
     broadcasterId: "",
@@ -50,10 +60,16 @@ function App() {
 
   return (
     <div className="App text-center text-white p-4 overflow-x-hidden min-h-full">
-      <SearchFilter setResponseDetails={setResponseDetails} populateClipsArray={populateClipsArray} />
+      <SearchFilter
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        setResponseDetails={setResponseDetails}
+        populateClipsArray={populateClipsArray}
+      />
 
       {clips.length > 0 ? (
         <ClipsContainer
+          searchQuery={searchQuery}
           setClips={setClips}
           clips={clips}
           responseDetails={responseDetails}

@@ -1,6 +1,8 @@
 export type SearchQuery = {
   title: string;
   streamer: string;
+  startDate: string;
+  endDate: string;
 };
 
 export type Clip = {

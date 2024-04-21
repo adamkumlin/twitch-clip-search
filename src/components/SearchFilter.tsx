@@ -1,23 +1,17 @@
-import { useState } from "react";
 import type { ResponseDetails, SearchQuery } from "../types";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import TitleIcon from "@mui/icons-material/Title";
 import SearchIcon from "@mui/icons-material/Search";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 
-
-
 interface SearchFilterProps {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
+  searchQuery: SearchQuery;
+  setSearchQuery: React.Dispatch<React.SetStateAction<SearchQuery>>;
 }
 
-export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchFilterProps) {
-  const [searchQuery, setSearchQuery] = useState<SearchQuery>({
-    title: "",
-    streamer: "",
-  });
-
+export function SearchFilter({ setResponseDetails, populateClipsArray, searchQuery, setSearchQuery }: SearchFilterProps) {
   async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
 
@@ -58,7 +52,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
     }
 
     const data = fetch(
-      `https://api.twitch.tv/helix/clips?broadcaster_id=${broadcasterId}&first=16&started_at=2024-01-01T00:00:00Z&ended_at=2024-02-01T00:00:00Z`,
+      `https://api.twitch.tv/helix/clips?broadcaster_id=${broadcasterId}&first=15&started_at=${searchQuery.startDate}&ended_at=${searchQuery.endDate}`,
       {
         headers: {
           Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
@@ -125,7 +119,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
           <input
             type="date"
             id="dateFrom"
-            className="text-transparent block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2"
+            className="text-transparent group-focus-within:text-white block h-10 bg-gray-500 border-t-2 border-b-2"
           />
         </div>
         <div className="group">
@@ -134,9 +128,9 @@ export function SearchFilter({ setResponseDetails, populateClipsArray }: SearchF
             To
           </label>
           <input
-            type="dateTo"
-            id="date"
-            className="text-transparent block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2 *"
+            type="date"
+            id="dateTo"
+            className="text-transparent group-focus-within:text-white block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2 *"
             max={Date.now()}
           />
         </div>

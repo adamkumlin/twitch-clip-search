@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Clip as ClipT, ResponseDetails, SortMetric, SortOption } from "../types";
+import type { Clip as ClipT, ResponseDetails, SearchQuery, SortMetric, SortOption } from "../types";
 import { Clip } from "./Clip";
 import { NextButton } from "./NextButton";
 import { PreviousButton } from "./PreviousButton";
@@ -12,6 +12,7 @@ interface ClipsContainerProps {
   responseDetails: ResponseDetails;
   populateClipsArray: (data: any) => void;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
+  searchQuery: SearchQuery;
 }
 
 export function ClipsContainer({
@@ -20,6 +21,7 @@ export function ClipsContainer({
   responseDetails,
   populateClipsArray,
   setResponseDetails,
+  searchQuery,
 }: ClipsContainerProps) {
   const [sortOption, setSortOption] = useState<SortOption>({
     metric: "views" as unknown as SortMetric,
@@ -158,8 +160,10 @@ export function ClipsContainer({
           responseDetails={responseDetails}
           populateClipsArray={populateClipsArray}
           setResponseDetails={setResponseDetails}
+          searchQuery={searchQuery}
         />
         <NextButton
+        searchQuery={searchQuery}
           responseDetails={responseDetails}
           populateClipsArray={populateClipsArray}
           setResponseDetails={setResponseDetails}

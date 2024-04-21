@@ -1,16 +1,17 @@
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { ResponseDetails } from "../types";
+import { ResponseDetails, SearchQuery } from "../types";
 
 interface NextButtonProps {
   responseDetails: ResponseDetails;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
+  searchQuery: SearchQuery;
 }
 
-export function NextButton({ populateClipsArray, setResponseDetails, responseDetails }: NextButtonProps) {
+export function NextButton({ populateClipsArray, setResponseDetails, responseDetails, searchQuery }: NextButtonProps) {
 
   async function handleNextButtonClick() {
-    const rawClips = await goToNextPage();
+    const rawClips = await goToNextPage(searchQuery);
     setResponseDetails((current) => ({
       ...current,
       pagination: rawClips.pagination.cursor,
@@ -19,9 +20,9 @@ export function NextButton({ populateClipsArray, setResponseDetails, responseDet
     populateClipsArray(rawClips);
   }
 
-  function goToNextPage() {
+  function goToNextPage(searchQuery: SearchQuery) {
     const data = fetch(
-      `https://api.twitch.tv/helix/clips?broadcaster_id=${responseDetails.broadcasterId}&first=15&after=${responseDetails.pagination}&started_at=2024-01-01T00:00:00Z&ended_at=2024-02-01T00:00:00Z`,
+      `https://api.twitch.tv/helix/clips?broadcaster_id=${responseDetails.broadcasterId}&first=15&after=${responseDetails.pagination}&started_at=${searchQuery.startDate}&ended_at=${searchQuery.endDate}`,
       {
         headers: {
           Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
