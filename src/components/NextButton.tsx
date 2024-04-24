@@ -9,7 +9,6 @@ interface NextButtonProps {
 }
 
 export function NextButton({ populateClipsArray, setResponseDetails, responseDetails, searchQuery }: NextButtonProps) {
-
   async function handleNextButtonClick() {
     const rawClips = await goToNextPage(searchQuery);
     setResponseDetails((current) => ({

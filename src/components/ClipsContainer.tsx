@@ -106,7 +106,7 @@ export function ClipsContainer({
       }
     }
 
-    setClips(sortedClips);
+    setClips([...sortedClips]);
   }, [sortOption]);
 
   return (
@@ -117,32 +117,32 @@ export function ClipsContainer({
         <div className="grid grid-cols-3 font-bold">
           <div>
             <a className="cursor-pointer underline" onClick={() => handleSortOption("title" as unknown as SortMetric)}>
-              Title{" "}
+              Title
               {sortOption.fromTop && sortOption.metric === ("title" as unknown as SortMetric) ? (
-                <ArrowDownward />
-              ) : !sortOption.fromTop && sortOption.metric === ("title" as unknown as SortMetric) ? (
                 <ArrowUpward />
+              ) : !sortOption.fromTop && sortOption.metric === ("title" as unknown as SortMetric) ? (
+                <ArrowDownward />
               ) : null}
             </a>
           </div>
 
           <div>
             <a className="cursor-pointer underline" onClick={() => handleSortOption("date" as unknown as SortMetric)}>
-              Upload date{" "}
+              Upload date
               {sortOption.fromTop && sortOption.metric === ("date" as unknown as SortMetric) ? (
-                <ArrowDownward />
-              ) : !sortOption.fromTop && sortOption.metric === ("date" as unknown as SortMetric) ? (
                 <ArrowUpward />
+              ) : !sortOption.fromTop && sortOption.metric === ("date" as unknown as SortMetric) ? (
+                <ArrowDownward />
               ) : null}
             </a>
           </div>
           <div>
             <a className="cursor-pointer underline" onClick={() => handleSortOption("views" as unknown as SortMetric)}>
-              Views{" "}
+              Views
               {sortOption.fromTop && sortOption.metric === ("views" as unknown as SortMetric) ? (
-                <ArrowDownward />
-              ) : !sortOption.fromTop && sortOption.metric === ("views" as unknown as SortMetric) ? (
                 <ArrowUpward />
+              ) : !sortOption.fromTop && sortOption.metric === ("views" as unknown as SortMetric) ? (
+                <ArrowDownward />
               ) : null}
             </a>
           </div>
@@ -163,7 +163,7 @@ export function ClipsContainer({
           searchQuery={searchQuery}
         />
         <NextButton
-        searchQuery={searchQuery}
+          searchQuery={searchQuery}
           responseDetails={responseDetails}
           populateClipsArray={populateClipsArray}
           setResponseDetails={setResponseDetails}

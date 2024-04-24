@@ -11,7 +11,12 @@ interface SearchFilterProps {
   setSearchQuery: React.Dispatch<React.SetStateAction<SearchQuery>>;
 }
 
-export function SearchFilter({ setResponseDetails, populateClipsArray, searchQuery, setSearchQuery }: SearchFilterProps) {
+export function SearchFilter({
+  setResponseDetails,
+  populateClipsArray,
+  searchQuery,
+  setSearchQuery,
+}: SearchFilterProps) {
   async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
 
@@ -120,7 +125,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray, searchQue
             type="date"
             id="dateFrom"
             value={searchQuery.startDate}
-            onChange={(e) => setSearchQuery((current) => ({...current, startDate: e.target.value}))}
+            onChange={(e) => setSearchQuery((current) => ({ ...current, startDate: e.target.value }))}
             className="text-transparent group-focus-within:text-white block h-10 bg-gray-500 border-t-2 border-b-2"
           />
         </div>
@@ -133,7 +138,7 @@ export function SearchFilter({ setResponseDetails, populateClipsArray, searchQue
             type="date"
             id="dateTo"
             value={searchQuery.endDate}
-            onChange={(e) => setSearchQuery((current) => ({...current, startDate: e.target.value}))}
+            onChange={(e) => setSearchQuery((current) => ({ ...current, startDate: e.target.value }))}
             className="text-transparent group-focus-within:text-white block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2 *"
             max={Date.now()}
           />

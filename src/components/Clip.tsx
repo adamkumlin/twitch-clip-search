@@ -7,12 +7,13 @@ interface ClipProps {
 }
 
 export function Clip({ clip, setFocusedThumbnail }: ClipProps) {
-
-
   return (
     <div className="grid grid-cols-3 odd:bg-blue-950 even:bg-blue-800 *:p-4">
       <div className="flex flex-row justify-between items-center">
-        <a href={clip.url} target="_blank" className="underline">
+        <a
+          href={clip.url}
+          target="_blank"
+          className="underline max-w-1/2 overflow-hidden text-nowrap overflow-ellipsis">
           {clip.title}
         </a>
         <img

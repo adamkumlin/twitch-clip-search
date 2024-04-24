@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Clip, ResponseDetails, SearchQuery } from "./types";
 import { SearchFilter } from "./components/SearchFilter";
 import { ClipsContainer } from "./components/ClipsContainer";
+import { DatePicker } from "./components/DatePicker";
 
 function App() {
   const [clips, setClips] = useState<Clip[]>([]);
@@ -77,7 +78,9 @@ function App() {
           setResponseDetails={setResponseDetails}
         />
       ) : null}
+    <DatePicker searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
     </div>
+
   );
 }
 
