@@ -9,6 +9,7 @@ interface SearchFilterProps {
   populateClipsArray: (data: any) => void;
   searchQuery: SearchQuery;
   setSearchQuery: React.Dispatch<React.SetStateAction<SearchQuery>>;
+  setEditDateStatus: React.Dispatch<React.SetStateAction<"start" | "end" | null>>;
 }
 
 export function SearchFilter({
@@ -16,6 +17,7 @@ export function SearchFilter({
   populateClipsArray,
   searchQuery,
   setSearchQuery,
+  setEditDateStatus
 }: SearchFilterProps) {
   async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
@@ -116,32 +118,23 @@ export function SearchFilter({
             onChange={(e) => handleChange(e)}
           />
         </div>
-        <div className="group">
-          <DateRangeIcon className="relative top-8 right-3 pointer-events-none group-focus-within:hidden" />
-          <label htmlFor="dateFrom" className="relative top-8 pointer-events-none group-focus-within:top-0">
-            From
-          </label>
-          <input
-            type="date"
-            id="dateFrom"
-            value={searchQuery.startDate}
-            onChange={(e) => setSearchQuery((current) => ({ ...current, startDate: e.target.value }))}
-            className="text-transparent group-focus-within:text-white block h-10 bg-gray-500 border-t-2 border-b-2"
-          />
-        </div>
-        <div className="group">
-          <DateRangeIcon className="relative top-8 right-3 pointer-events-none group-focus-within:hidden" />
-          <label htmlFor="dateTo" className="relative top-8 pointer-events-none group-focus-within:top-0">
-            To
-          </label>
-          <input
-            type="date"
-            id="dateTo"
-            value={searchQuery.endDate}
-            onChange={(e) => setSearchQuery((current) => ({ ...current, startDate: e.target.value }))}
-            className="text-transparent group-focus-within:text-white block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2 *"
-            max={Date.now()}
-          />
+        <div className="flex flex-row items-end">
+          <div className="flex flex-row bg-gray-500 border-t-2 border-b-2 h-10 pr-2 pt-1">
+            <DateRangeIcon />
+            <label className="pl-2">Date</label>
+          </div>
+          <button
+            type="button"
+            className="block h-10 bg-gray-500 border-t-2 border-b-2"
+            onClick={() => setEditDateStatus("start")}>
+            {searchQuery.startDate.slice(0, 10)}
+          </button>
+          <button
+            type="button"
+            className="block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2"
+            onClick={() => setEditDateStatus("end")}>
+            {searchQuery.endDate.slice(0, 10)}
+          </button>
         </div>
         <SearchIcon
           color="primary"

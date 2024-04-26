@@ -3,13 +3,11 @@ import type { Clip, ResponseDetails, SearchQuery } from "./types";
 import { SearchFilter } from "./components/SearchFilter";
 import { ClipsContainer } from "./components/ClipsContainer";
 import { DatePicker } from "./components/DatePicker";
+import { oneMonthPriorToToday, today } from "./constants";
 
 function App() {
   const [clips, setClips] = useState<Clip[]>([]);
-  const date = new Date();
-  let oneMonthPriorToToday = new Date();
-  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  oneMonthPriorToToday.setDate(today.getDate() - 30);
+
   const [searchQuery, setSearchQuery] = useState<SearchQuery>({
     title: "",
     streamer: "",
@@ -20,6 +18,8 @@ function App() {
     pagination: "",
     broadcasterId: "",
   });
+
+  const [editDateStatus, setEditDateStatus] = useState<"start" | "end" | null>(null);
 
   function populateClipsArray(data: any): void {
     const clips: Clip[] = [];
@@ -66,6 +66,7 @@ function App() {
         setSearchQuery={setSearchQuery}
         setResponseDetails={setResponseDetails}
         populateClipsArray={populateClipsArray}
+        setEditDateStatus={setEditDateStatus}
       />
 
       {clips.length > 0 ? (
@@ -78,7 +79,8 @@ function App() {
           setResponseDetails={setResponseDetails}
         />
       ) : null}
-    <DatePicker searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+    
+    {editDateStatus ? <DatePicker setEditDateStatus={setEditDateStatus} editDateStatus={editDateStatus} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/> : null}
     </div>
 
   );

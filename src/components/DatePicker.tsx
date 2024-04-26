@@ -2,34 +2,48 @@ import { useEffect, useState } from "react";
 import type { SearchQuery } from "../types";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
+import { today } from "../constants";
 interface DatePickerProps {
   searchQuery: SearchQuery;
   setSearchQuery: React.Dispatch<React.SetStateAction<SearchQuery>>;
+  editDateStatus: "start" | "end" | null;
+  setEditDateStatus: React.Dispatch<React.SetStateAction<"start" | "end" | null>>;
 }
 
-export function DatePicker({ searchQuery }: DatePickerProps) {
+export function DatePicker({ searchQuery, setSearchQuery, editDateStatus, setEditDateStatus }: DatePickerProps) {
   const [dayElements, setDayElements] = useState<JSX.Element[]>([]);
   const [currentStartDate, setCurrentStartDate] = useState<Date>(new Date(Date.parse(searchQuery.startDate)));
+  const currentStartDateCopy = new Date(currentStartDate);
 
-  function millisecondsToWholeDays(milliseconds: number): number {
-    return Math.round(Math.floor(milliseconds / 1_000 / 60 / 60 / 24));
+  function handleDateClick(date: Date) {
+
+    if (editDateStatus === "start") {
+      setSearchQuery((current) => ({...current, startDate: date.toLocaleDateString()}))
+      setCurrentStartDate(date);
+    } else {
+      setSearchQuery((current) => ({ ...current, endDate: date.toLocaleDateString() }));
+    }
+
+    setEditDateStatus(null);
   }
 
-  function drawCalendar(startDate: Date, daysDifference?: number): JSX.Element[] {
+  function drawCalendar(startDate: Date): JSX.Element[] {
     let daysBetween: Date[] = [];
     const dayElements: JSX.Element[] = [];
-    const today = new Date(Date.now()).toLocaleDateString();
 
+    // Add 35 days starting from the start date
     for (let i = 1; i <= 35; i++) {
       const dayBetween = new Date(startDate);
       dayBetween.setDate(dayBetween.getDate() + i);
       daysBetween.push(dayBetween);
     }
-    
+
+    // If today's date is included in the array, remove every day after today
+    let lastDayIndex: number | null = null;
     for (let i = 0; i < daysBetween.length; i++) {
-      if (daysBetween[i].toLocaleDateString() === today) {
-        daysBetween = daysBetween.slice(0, i);
+      if (daysBetween[i].toLocaleDateString() === today.toLocaleDateString()) {
+        daysBetween = daysBetween.slice(0, i + 6);
+        lastDayIndex = i;
         break;
       }
     }
@@ -39,7 +53,13 @@ export function DatePicker({ searchQuery }: DatePickerProps) {
         <button
           type="button"
           key={i}
-          className={daysDifference && i <= daysDifference ? "border-r-2 border-b-2 bg-lime-900" : "border-r-2 border-b-2"}>
+          disabled={lastDayIndex && i > lastDayIndex ? true : false}
+          className={
+            lastDayIndex && i > lastDayIndex
+              ? "border-r-2 border-b-2 opacity-35"
+              : "border-r-2 border-b-2"
+          }
+            onClick={() => handleDateClick(daysBetween[i])}>
           {daysBetween[i].getDate() + "/" + (daysBetween[i].getMonth() + 1)}
         </button>
       );
@@ -49,33 +69,36 @@ export function DatePicker({ searchQuery }: DatePickerProps) {
     return dayElements;
   }
 
-  function handleClick(isBack: boolean) {
-    const currentStartDateCopy = new Date(currentStartDate);
+  function handlePageButtonClick(isBack: boolean) {
+    const latestDate = new Date(currentStartDateCopy);
+    latestDate.setDate(latestDate.getDate() + 30);
+
+    // If back is clicked and the calendar would scroll after today's date
+    if (!isBack && latestDate.toLocaleDateString() === today.toLocaleDateString()) {
+      return;
+    }
 
     if (isBack) {
-      currentStartDate.setDate(currentStartDate.getDate() - 35);
-    } else {
-      currentStartDate.setDate(currentStartDate.getDate() + 35);
+      currentStartDateCopy.setDate(currentStartDateCopy.getDate() - 35);
+    } else if (!isBack) {
+      currentStartDateCopy.setDate(currentStartDateCopy.getDate() + 35);
     }
-    setCurrentStartDate(currentStartDateCopy)
-    console.log(currentStartDate)
+
+    setCurrentStartDate(currentStartDateCopy);
     const days: JSX.Element[] = drawCalendar(currentStartDate);
     setDayElements([...days]);
   }
-
   useEffect(() => {
-    const millisecondsStartDate = Date.parse(searchQuery.startDate);
     const dateStartDate = new Date(Date.parse(searchQuery.startDate));
 
-    const millisecondsEndDate = Date.parse(searchQuery.endDate);
-    const dateEndDate = new Date(Date.parse(searchQuery.endDate));
-    console.log(dateEndDate)
-
-    const daysDifference = millisecondsToWholeDays(millisecondsEndDate - millisecondsStartDate);
-
-    const days: JSX.Element[] = drawCalendar(dateStartDate, daysDifference);
+    const days: JSX.Element[] = drawCalendar(dateStartDate);
     setDayElements([...days]);
   }, [searchQuery.startDate, searchQuery.endDate]);
+
+  useEffect(() => {
+    const days: JSX.Element[] = drawCalendar(currentStartDate);
+    setDayElements([...days]);
+  }, [currentStartDate]);
 
   return (
     <div className="DatePicker flex flex-col bg-gray-900 border-2 w-1/4 h-fit">
@@ -89,9 +112,13 @@ export function DatePicker({ searchQuery }: DatePickerProps) {
         <span>Su</span>
       </div>
       <div className="days-container grid grid-cols-7 grid-rows-5 *:p-2">{dayElements}</div>
-      <div>
-        <button type="button" onClick={() => handleClick(true)}><ArrowBackIcon/></button>
-        <button type="button" onClick={() => handleClick(false)}><ArrowForwardIcon /> </button>
+      <div className="bg-black flex flex-row justify-evenly">
+        <button type="button" onClick={() => handlePageButtonClick(true)}>
+          <ArrowBackIcon />
+        </button>
+        <button type="button" onClick={() => handlePageButtonClick(false)}>
+          <ArrowForwardIcon />
+        </button>
       </div>
     </div>
   );

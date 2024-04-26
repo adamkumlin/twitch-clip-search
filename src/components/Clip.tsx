@@ -24,7 +24,7 @@ export function Clip({ clip, setFocusedThumbnail }: ClipProps) {
           onMouseLeave={() => setFocusedThumbnail("")}
         />
       </div>
-      <span className="border-r-2 border-l-2 border-dashed border-gray-500">
+      <span className="border-r-2 border-l-2 border-dashed border-gray-500 ">
         {clip.createdAt.toLocaleString("en-US").slice(0, 10)}
       </span>
       <span>{clip.viewCount.toLocaleString("en-US")}</span>
