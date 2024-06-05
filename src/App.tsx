@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Clip, ResponseDetails, SearchQuery } from "./types";
 import { SearchFilter } from "./components/SearchFilter";
 import { ClipsContainer } from "./components/ClipsContainer";
@@ -58,16 +58,6 @@ function App() {
 
     setClips(clips);
   }
-
-  const [users, setUsers] = useState();
-
-  console.log(users)
-  useEffect(() => {
-    fetch("https://localhost:3000/getUsers")
-    .then(res => res.json())
-    .then(data => setUsers(data))
-    .catch(err => console.log(err));
-  }, [])
 
   return (
     <div className="App text-center text-white p-4 overflow-x-hidden min-h-full">
