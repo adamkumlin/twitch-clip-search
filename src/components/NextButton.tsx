@@ -1,14 +1,14 @@
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { ResponseDetails, SearchQuery } from "../types";
 
-interface NextButtonProps {
+interface Props {
   responseDetails: ResponseDetails;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
   searchQuery: SearchQuery;
 }
 
-export function NextButton({ populateClipsArray, setResponseDetails, responseDetails, searchQuery }: NextButtonProps) {
+export function NextButton({ populateClipsArray, setResponseDetails, responseDetails, searchQuery }: Props) {
   async function handleNextButtonClick() {
     const rawClips = await goToNextPage(searchQuery);
     setResponseDetails((current) => ({

@@ -1,11 +1,11 @@
-export type SearchQuery = {
+export interface SearchQuery {
   title: string;
   streamer: string;
-  startDate: string;
-  endDate: string;
-};
+  startDate: Date;
+  endDate: Date;
+}
 
-export type Clip = {
+export interface Clip {
   id: string;
   url: string;
   embedUrl: string;
@@ -15,22 +15,20 @@ export type Clip = {
   title: string;
   viewCount: number;
   createdAt: Date;
-};
+}
 
-export type ResponseDetails = {
+export interface ResponseDetails {
   pagination: string;
   broadcasterId: string;
-};
+}
 
-export type SortMetric = {
+export interface SortMetric {
   title: string;
-  date: string;
+  date: Date;
   views: string;
-};
+}
 
-export type FromTop = boolean;
-
-export type SortOption = {
+export interface SortOption {
   metric: SortMetric;
   fromTop: boolean;
-};
+}

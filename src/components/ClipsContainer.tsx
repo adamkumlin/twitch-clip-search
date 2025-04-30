@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import type { Clip as ClipT, ResponseDetails, SearchQuery, SortMetric, SortOption } from "../types";
+import { Clip as ClipT, ResponseDetails, SearchQuery, SortMetric, SortOption } from "../types";
 import { Clip } from "./Clip";
 import { NextButton } from "./NextButton";
 import { PreviousButton } from "./PreviousButton";
 import ArrowDownward from "@mui/icons-material/ArrowDownward";
 import ArrowUpward from "@mui/icons-material/ArrowUpward";
 
-interface ClipsContainerProps {
+interface Props {
   clips: ClipT[];
   setClips: React.Dispatch<React.SetStateAction<ClipT[]>>;
   responseDetails: ResponseDetails;
@@ -22,7 +22,7 @@ export function ClipsContainer({
   populateClipsArray,
   setResponseDetails,
   searchQuery,
-}: ClipsContainerProps) {
+}: Props) {
   const [sortOption, setSortOption] = useState<SortOption>({
     metric: "views" as unknown as SortMetric,
     fromTop: true,

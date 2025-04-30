@@ -4,7 +4,7 @@ import TitleIcon from "@mui/icons-material/Title";
 import SearchIcon from "@mui/icons-material/Search";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 
-interface SearchFilterProps {
+interface Props {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
   searchQuery: SearchQuery;
@@ -18,7 +18,7 @@ export function SearchFilter({
   searchQuery,
   setSearchQuery,
   setEditDateStatus
-}: SearchFilterProps) {
+}: Props) {
   async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
 

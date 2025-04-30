@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import type { SearchQuery } from "../types";
+import { SearchQuery } from "../types";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { today } from "../constants";
-interface DatePickerProps {
+interface Props {
   searchQuery: SearchQuery;
   setSearchQuery: React.Dispatch<React.SetStateAction<SearchQuery>>;
   editDateStatus: "start" | "end" | null;
   setEditDateStatus: React.Dispatch<React.SetStateAction<"start" | "end" | null>>;
 }
 
-export function DatePicker({ searchQuery, setSearchQuery, editDateStatus, setEditDateStatus }: DatePickerProps) {
+export function DatePicker({ searchQuery, setSearchQuery, editDateStatus, setEditDateStatus }: Props) {
   const [dayElements, setDayElements] = useState<JSX.Element[]>([]);
   const [currentStartDate, setCurrentStartDate] = useState<Date>(new Date(Date.parse(searchQuery.startDate)));
   const currentStartDateCopy = new Date(currentStartDate);

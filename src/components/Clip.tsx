@@ -1,12 +1,12 @@
 import { SetStateAction } from "react";
 import type { Clip } from "../types";
 
-interface ClipProps {
+interface Props {
   clip: Clip;
   setFocusedThumbnail: React.Dispatch<SetStateAction<string>>;
 }
 
-export function Clip({ clip, setFocusedThumbnail }: ClipProps) {
+export function Clip({ clip, setFocusedThumbnail }: Props) {
   return (
     <div className="grid grid-cols-3 odd:bg-blue-950 even:bg-blue-800 *:p-4">
       <div className="flex flex-row justify-between items-center">

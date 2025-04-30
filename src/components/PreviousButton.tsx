@@ -1,7 +1,7 @@
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import type { ResponseDetails, SearchQuery } from "../types";
+import { ResponseDetails, SearchQuery } from "../types";
 
-interface PreviousButtonProps {
+interface Props {
   responseDetails: ResponseDetails;
   populateClipsArray: (data: any, isFiltered: boolean) => void;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
@@ -13,7 +13,7 @@ export function PreviousButton({
   populateClipsArray,
   setResponseDetails,
   searchQuery,
-}: PreviousButtonProps) {
+}: Props) {
   function goToPreviousPage() {
     const data = fetch(
       `https://api.twitch.tv/helix/clips?broadcaster_id=${responseDetails.broadcasterId}&first=15&before=${responseDetails.pagination}&started_at=${searchQuery.startDate}&ended_at=${searchQuery.endDate}`,
