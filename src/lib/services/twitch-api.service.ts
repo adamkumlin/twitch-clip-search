@@ -9,6 +9,7 @@ export class TwitchApiService {
     const url = `${this.requestBaseUrl}/${endpoint}`;
     const res = await fetch(url, {headers: this.requestHeaders, method: "GET"});
     const data = await res.json();
+    console.log(data)
     return data;
   }
 }

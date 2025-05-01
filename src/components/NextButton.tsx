@@ -1,16 +1,15 @@
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { ResponseDetails, SearchQuery } from "../lib/types";
+import { ResponseDetails } from "../lib/types";
 
 interface Props {
   responseDetails: ResponseDetails;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
-  searchQuery: SearchQuery;
 }
 
-export function NextButton({ populateClipsArray, setResponseDetails, responseDetails, searchQuery }: Props) {
+export function NextButton({ populateClipsArray, setResponseDetails, responseDetails }: Props) {
   async function handleNextButtonClick() {
-    const rawClips = await goToNextPage(searchQuery);
+    const rawClips = await goToNextPage();
     setResponseDetails((current) => ({
       ...current,
       pagination: rawClips.pagination.cursor,
@@ -19,7 +18,7 @@ export function NextButton({ populateClipsArray, setResponseDetails, responseDet
     populateClipsArray(rawClips);
   }
 
-  function goToNextPage(searchQuery: SearchQuery) {
+  function goToNextPage() {
     const data = fetch(
       `https://api.twitch.tv/helix/clips?broadcaster_id=${responseDetails.broadcasterId}&first=15&after=${responseDetails.pagination}&started_at=${searchQuery.startDate}&ended_at=${searchQuery.endDate}`,
       {

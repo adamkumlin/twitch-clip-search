@@ -5,6 +5,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import { clipService } from "../lib/services/clip.service";
 import { useSearchQueryStore } from "../lib/store";
+import { useState } from "react";
+import { oneMonthPriorToToday, today } from "../lib/constants";
 
 interface Props {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
@@ -16,19 +18,24 @@ export function SearchFilter({
   populateClipsArray,
 }: Props) {
 
-  const searchQuery = useSearchQueryStore(s => s.edit)
+  const {query, setTitle, setBroadcasterName, setTimespan} = useSearchQueryStore();
+
+  const [startDate, setStartDate] = useState<Date>(oneMonthPriorToToday);
+  const [endDate, setEndDate] = useState<Date>(today);
+
   async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
 
-    if (searchQuery.broadcasterName === "") {
+    if (!query.broadcasterName) {
       alert("Streamer is mandatory");
       return;
     }
-    const broadcasterId = await clipService.getBroadcasterId(searchQuery.broadcasterName);
 
+    const broadcasterId = await clipService.getBroadcasterId(query.broadcasterName);
+    setTimespan([startDate, endDate])
     const rawClips = await clipService.getClips({
       broadcasterId: broadcasterId,
-      timespan: searchQuery.timespan
+      timespan: query.timespan
     });
 
     setResponseDetails((current) => ({
@@ -37,25 +44,33 @@ export function SearchFilter({
       broadcasterId: broadcasterId,
     }));
 
-    if (searchQuery.title !== "") {
-      const filteredClips = filterClips(rawClips);
+    if (query.title) {
+      const filteredClips = filterClips(rawClips.data);
       populateClipsArray(filteredClips);
       return;
     }
-    populateClipsArray(rawClips);
+    populateClipsArray(rawClips.data);
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.id === "title") {
-      setSearchQuery((current) => ({ ...current, title: e.target.value }));
+      setTitle(e.target.value)
     } else {
-      setSearchQuery((current) => ({ ...current, broadcasterName: e.target.value }));
+      setBroadcasterName(e.target.value)
+    }
+  }
+
+  function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.id === "startDate") {
+      setStartDate(new Date(e.target.value))
+    } else {
+      setEndDate(new Date(e.target.value))
     }
   }
 
   function filterClips(rawClips: any): any {
     const filteredClips = rawClips.data.filter((clip) =>
-      clip.title.toLowerCase().includes(searchQuery.title.toLowerCase())
+      clip.title.toLowerCase().includes(query.title.toLowerCase())
     );
     return filteredClips;
   }
@@ -72,7 +87,7 @@ export function SearchFilter({
             id="streamer"
             className="text-black block m-auto h-10 bg-gray-500 border-l-2 border-t-2 border-b-2"
             type="text"
-            value={searchQuery.broadcasterName}
+            value={query.broadcasterName}
             onChange={(e) => handleChange(e)}
           />
         </div>
@@ -85,7 +100,7 @@ export function SearchFilter({
             id="title"
             className="text-black block m-auto h-10 bg-gray-500 border-t-2 border-b-2"
             type="text"
-            value={searchQuery.title}
+            value={query.title}
             onChange={(e) => handleChange(e)}
           />
         </div>
@@ -94,9 +109,9 @@ export function SearchFilter({
             <DateRangeIcon />
             <label className="pl-2">Date range</label>
           </div>
-          <input type="date" className="block h-10 bg-gray-500 border-t-2 border-b-2 outline-none"/>
+          <input id="startDate" type="date" value={startDate.toLocaleDateString("sv-SE")} onChange={(e) => handleDateChange(e)} className="block h-10 bg-gray-500 border-t-2 border-b-2 outline-none"/>
           <span className="h-10 bg-gray-500 border-t-2 border-b-2 font-bold px-2 pt-1">to</span>
-          <input type="date" className="block h-10 bg-gray-500 border-t-2 border-b-2 border-r-2 outline-none"/>
+          <input id="endDate" type="date" value={endDate.toLocaleDateString("sv-SE")} min={startDate.toLocaleDateString("sv-SE")} onChange={(e) => handleDateChange(e)} className="block h-10 bg-gray-500 border-t-2 border-b-2 border-r-2 outline-none"/>
         </div>
         <SearchIcon
           color="primary"

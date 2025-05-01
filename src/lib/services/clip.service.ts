@@ -12,10 +12,9 @@ class ClipService {
   }
 
   async getClips(options: GetClipsOptions) {
-    const endpoint = `clips?broadcaster_id=${options.broadcasterId}&first=15&started_at=${options.timespan[0]}&ended_at=${options.timespan[1]}`;
-    const {data} = await this.apiService.get(endpoint);
-    console.log(data)
-    return data;
+    const endpoint = `clips?broadcaster_id=${options.broadcasterId}&first=15&started_at=${options.timespan[0].toISOString()}&ended_at=${options.timespan[1].toISOString()}`;
+    const {data, pagination} = await this.apiService.get(endpoint);
+    return {data, pagination};
   }
 }
 

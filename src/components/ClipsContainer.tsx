@@ -7,22 +7,18 @@ import ArrowDownward from "@mui/icons-material/ArrowDownward";
 import ArrowUpward from "@mui/icons-material/ArrowUpward";
 
 interface Props {
-  clips: ClipT[];
-  setClips: React.Dispatch<React.SetStateAction<ClipT[]>>;
   responseDetails: ResponseDetails;
   populateClipsArray: (data: any) => void;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
-  searchQuery: SearchQuery;
 }
 
 export function ClipsContainer({
-  clips,
-  setClips,
   responseDetails,
   populateClipsArray,
   setResponseDetails,
-  searchQuery,
 }: Props) {
+  const [clips, setClips] = useState<ClipT[]>([]);
+
   const [sortOption, setSortOption] = useState<SortOption>({
     metric: "views" as unknown as SortMetric,
     fromTop: true,
@@ -160,10 +156,8 @@ export function ClipsContainer({
           responseDetails={responseDetails}
           populateClipsArray={populateClipsArray}
           setResponseDetails={setResponseDetails}
-          searchQuery={searchQuery}
         />
         <NextButton
-          searchQuery={searchQuery}
           responseDetails={responseDetails}
           populateClipsArray={populateClipsArray}
           setResponseDetails={setResponseDetails}

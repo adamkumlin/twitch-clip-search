@@ -1,18 +1,16 @@
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { ResponseDetails, SearchQuery } from "../lib/types";
+import { ResponseDetails } from "../lib/types";
 
 interface Props {
   responseDetails: ResponseDetails;
   populateClipsArray: (data: any, isFiltered: boolean) => void;
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
-  searchQuery: SearchQuery;
 }
 
 export function PreviousButton({
   responseDetails,
   populateClipsArray,
   setResponseDetails,
-  searchQuery,
 }: Props) {
   function goToPreviousPage() {
     const data = fetch(
@@ -30,7 +28,6 @@ export function PreviousButton({
 
   async function handlePreviousButtonClick() {
     const rawClips = await goToPreviousPage();
-    console.log(responseDetails.pagination);
     setResponseDetails((current) => ({
       ...current,
       pagination: rawClips.pagination.cursor,

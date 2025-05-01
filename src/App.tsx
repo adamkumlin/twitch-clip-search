@@ -1,11 +1,9 @@
 import { useState } from "react";
-import type { Clip, ResponseDetails } from "./lib/types";
+import { Clip, ResponseDetails } from "./lib/types";
 import { SearchFilter } from "./components/SearchFilter";
 import { ClipsContainer } from "./components/ClipsContainer";
 
 function App() {
-  const [clips, setClips] = useState<Clip[]>([]);
-
   const [responseDetails, setResponseDetails] = useState<ResponseDetails>({
     pagination: "",
     broadcasterId: "",
@@ -56,18 +54,12 @@ function App() {
         populateClipsArray={populateClipsArray}
       />
 
-      {clips.length > 0 ? (
-        <ClipsContainer
-          searchQuery={searchQuery}
-          setClips={setClips}
-          clips={clips}
-          responseDetails={responseDetails}
-          populateClipsArray={populateClipsArray}
-          setResponseDetails={setResponseDetails}
-        />
-      ) : null}
+      <ClipsContainer
+        responseDetails={responseDetails}
+        populateClipsArray={populateClipsArray}
+        setResponseDetails={setResponseDetails}
+      />
     </div>
-
   );
 }
 
