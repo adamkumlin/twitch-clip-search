@@ -1,8 +1,12 @@
 export interface SearchQuery {
   title: string;
-  streamer: string;
-  startDate: Date;
-  endDate: Date;
+  broadcasterName: string;
+  timespan: [start: Date, end: Date]
+}
+
+export interface GetClipsOptions {
+  broadcasterId: string;
+  timespan: [start: Date, end: Date]
 }
 
 export interface Clip {

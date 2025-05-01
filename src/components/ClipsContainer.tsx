@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Clip as ClipT, ResponseDetails, SearchQuery, SortMetric, SortOption } from "../types";
+import { Clip as ClipT, ResponseDetails, SearchQuery, SortMetric, SortOption } from "../lib/types";
 import { Clip } from "./Clip";
 import { NextButton } from "./NextButton";
 import { PreviousButton } from "./PreviousButton";

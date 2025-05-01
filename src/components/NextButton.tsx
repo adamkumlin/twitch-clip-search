@@ -1,5 +1,5 @@
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { ResponseDetails, SearchQuery } from "../types";
+import { ResponseDetails, SearchQuery } from "../lib/types";
 
 interface Props {
   responseDetails: ResponseDetails;

@@ -1,5 +1,5 @@
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { ResponseDetails, SearchQuery } from "../types";
+import { ResponseDetails, SearchQuery } from "../lib/types";
 
 interface Props {
   responseDetails: ResponseDetails;

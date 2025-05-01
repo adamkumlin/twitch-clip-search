@@ -1,35 +1,35 @@
-import type { ResponseDetails, SearchQuery } from "../types";
+import type { ResponseDetails } from "../lib/types";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import TitleIcon from "@mui/icons-material/Title";
 import SearchIcon from "@mui/icons-material/Search";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import { clipService } from "../services/clip.service";
+import { clipService } from "../lib/services/clip.service";
+import { useSearchQueryStore } from "../lib/store";
 
 interface Props {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
   populateClipsArray: (data: any) => void;
-  searchQuery: SearchQuery;
-  setSearchQuery: React.Dispatch<React.SetStateAction<SearchQuery>>;
-  setEditDateStatus: React.Dispatch<React.SetStateAction<"start" | "end" | null>>;
 }
 
 export function SearchFilter({
   setResponseDetails,
   populateClipsArray,
-  searchQuery,
-  setSearchQuery,
-  setEditDateStatus
 }: Props) {
+
+  const searchQuery = useSearchQueryStore(s => s.edit)
   async function handleSearch(e: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     e.preventDefault();
 
-    if (searchQuery.streamer === "") {
+    if (searchQuery.broadcasterName === "") {
       alert("Streamer is mandatory");
       return;
     }
-    const broadcasterId = await clipService.getBroadcasterId(searchQuery.streamer);
+    const broadcasterId = await clipService.getBroadcasterId(searchQuery.broadcasterName);
 
-    const rawClips = await getClips(broadcasterId);
+    const rawClips = await clipService.getClips({
+      broadcasterId: broadcasterId,
+      timespan: searchQuery.timespan
+    });
 
     setResponseDetails((current) => ({
       ...current,
@@ -49,26 +49,8 @@ export function SearchFilter({
     if (e.target.id === "title") {
       setSearchQuery((current) => ({ ...current, title: e.target.value }));
     } else {
-      setSearchQuery((current) => ({ ...current, streamer: e.target.value }));
+      setSearchQuery((current) => ({ ...current, broadcasterName: e.target.value }));
     }
-  }
-
-  function getClips(broadcasterId: string): any {
-    if (broadcasterId === "") {
-      return;
-    }
-
-    const data = fetch(
-      `https://api.twitch.tv/helix/clips?broadcaster_id=${broadcasterId}&first=15&started_at=${searchQuery.startDate}&ended_at=${searchQuery.endDate}`,
-      {
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
-          "Client-Id": import.meta.env.VITE_CLIENT_ID,
-        },
-      }
-    ).then((res) => res.json());
-
-    return data;
   }
 
   function filterClips(rawClips: any): any {
@@ -90,7 +72,7 @@ export function SearchFilter({
             id="streamer"
             className="text-black block m-auto h-10 bg-gray-500 border-l-2 border-t-2 border-b-2"
             type="text"
-            value={searchQuery.streamer}
+            value={searchQuery.broadcasterName}
             onChange={(e) => handleChange(e)}
           />
         </div>
@@ -110,20 +92,11 @@ export function SearchFilter({
         <div className="flex flex-row items-end">
           <div className="flex flex-row bg-gray-500 border-t-2 border-b-2 h-10 pr-2 pt-1">
             <DateRangeIcon />
-            <label className="pl-2">Date</label>
+            <label className="pl-2">Date range</label>
           </div>
-          <button
-            type="button"
-            className="block h-10 bg-gray-500 border-t-2 border-b-2"
-            onClick={() => setEditDateStatus("start")}>
-            {searchQuery.startDate.slice(0, 10)}
-          </button>
-          <button
-            type="button"
-            className="block h-10 bg-gray-500 border-r-2 border-t-2 border-b-2"
-            onClick={() => setEditDateStatus("end")}>
-            {searchQuery.endDate.slice(0, 10)}
-          </button>
+          <input type="date" className="block h-10 bg-gray-500 border-t-2 border-b-2 outline-none"/>
+          <span className="h-10 bg-gray-500 border-t-2 border-b-2 font-bold px-2 pt-1">to</span>
+          <input type="date" className="block h-10 bg-gray-500 border-t-2 border-b-2 border-r-2 outline-none"/>
         </div>
         <SearchIcon
           color="primary"

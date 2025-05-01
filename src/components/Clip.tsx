@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import type { Clip } from "../types";
+import type { Clip } from "../lib/types";
 
 interface Props {
   clip: Clip;
