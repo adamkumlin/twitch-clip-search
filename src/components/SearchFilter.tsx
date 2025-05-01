@@ -3,6 +3,7 @@ import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import TitleIcon from "@mui/icons-material/Title";
 import SearchIcon from "@mui/icons-material/Search";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import { clipService } from "../services/clip.service";
 
 interface Props {
   setResponseDetails: React.Dispatch<React.SetStateAction<ResponseDetails>>;
@@ -26,15 +27,14 @@ export function SearchFilter({
       alert("Streamer is mandatory");
       return;
     }
+    const broadcasterId = await clipService.getBroadcasterId(searchQuery.streamer);
 
-    const data = await getBroadcasterId();
-
-    const rawClips = await getClips(data.data[0].id);
+    const rawClips = await getClips(broadcasterId);
 
     setResponseDetails((current) => ({
       ...current,
       pagination: rawClips.pagination.cursor,
-      broadcasterId: data.data[0].id,
+      broadcasterId: broadcasterId,
     }));
 
     if (searchQuery.title !== "") {
@@ -67,17 +67,6 @@ export function SearchFilter({
         },
       }
     ).then((res) => res.json());
-
-    return data;
-  }
-
-  function getBroadcasterId(): any {
-    let data = fetch(`https://api.twitch.tv/helix/users?login=${searchQuery.streamer}`, {
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`,
-        "Client-Id": import.meta.env.VITE_CLIENT_ID,
-      },
-    }).then((response) => response.json());
 
     return data;
   }
